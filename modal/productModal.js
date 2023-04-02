@@ -1,5 +1,6 @@
+//import 
 import mongoose from "mongoose";
-
+//making product schema
 const productModal=new mongoose.Schema({
     name:{
         type:String,
@@ -7,8 +8,10 @@ const productModal=new mongoose.Schema({
     },
     quantity:{
         type:Number,
+        require:true
     }
 })
 
 const product=mongoose.model("product",productModal);
+//export product
 export default product;

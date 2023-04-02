@@ -9,6 +9,8 @@ dotENV.config({
 const URL = process.env.DB_URL;
 const PORT = process.env.PORT;
 
+//database connection
+
 export const connectDB = async()=>{
      
     const connection = await mongoose.connect(`${URL}`).then(()=>{
