@@ -72,19 +72,50 @@ export const getProductById = async (request, response) => {
 //update the product
 export const updateProduct = async (request, response) => {
   try {
-    const id = request.params.id;
-    let update = request.body;
-    const options={new:true};
-    const result =await product.findByIdAndUpdate(id, update,options);
-    if (result) {
-      return response.status(200).json({ message: "updated successfully" });
+    const { id: pid } = request.params;
+    const {number} = request.query;
+   
+    if (!number) {
+      response.status(402).json({ error: "write correctly" });
+    }
+    const prod = await product.findOne({ _id: pid });
+    
+    let newQ = prod.quantity + (+number);
+    console.log(prod.quantity+ (+number));
+    if (newQ > 0) {
+      const updatedQ = await product.findByIdAndUpdate(
+        { _id: pid },
+        { quantity: newQ },
+        { new: true }
+      );
+      response.status(200).json({
+        success: true,
+        data: updatedQ,
+        message: "successfully updated",
+      });
     } else {
-      return response.status(402).json({ error: "Process Failed" });
+      response.status(401).json({
+        success: false,
+        message: "quantity can not be less than or = 0",
+      });
     }
   } catch (error) {
-    return response.status(402).json({ error: "Process Failed" });
+    return response.status(401).json({ error: "Process Failed" });
   }
- 
+
+  //   try {
+  //     const id = request.params.id;
+  //     let update = request.body;
+  //     const options={new:true};
+  //     const result =await product.findByIdAndUpdate(id, update,options);
+  //     if (result) {
+  //       return response.status(200).json({ message: "updated successfully" });
+  //     } else {
+  //       return response.status(402).json({ error: "Process Failed" });
+  //     }
+  //   } catch (error) {
+  //     return response.status(402).json({ error: "Process Failed" });
+  //   }
 };
 
 // delete product
